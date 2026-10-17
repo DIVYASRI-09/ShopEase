@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopEase - Online Shopping</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6fa;
+  color: #222;
+}
+
+header {
+  background: #5428a5;
+  color: white;
+  padding: 18px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.search {
+  display: flex;
+  gap: 5px;
+}
+
+.search input {
+  padding: 11px;
+  width: 230px;
+  border: none;
+  border-radius: 6px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  background: #6c3dcc;
+  color: white;
+  font-size: 14px;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+.cart-button {
+  background: white;
+  color: #5428a5;
+  font-weight: bold;
+}
+
+.hero {
+  background: linear-gradient(120deg, #5428a5, #a17be8);
+  color: white;
+  padding: 45px 7%;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  margin-bottom: 20px;
+}
+
+.hero button {
+  background: white;
+  color: #5428a5;
+  font-weight: bold;
+}
+
+section {
+  padding: 28px 6%;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 20px;
+}
+
+.product {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+.product .emoji {
+  font-size: 65px;
+  padding: 15px;
+  background: #f0eaff;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.product h3 {
+  margin-bottom: 10px;
+}
+
+.price {
+  color: #5428a5;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 12px;
+}
+
+.product button {
+  width: 100%;
+}
+
+.panel {
+  background: white;
+  padding: 22px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 0;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+}
+
+.cart-item input {
+  width: 55px;
+  padding: 6px;
+}
+
+.total {
+  font-size: 21px;
+  font-weight: bold;
+  margin: 18px 0;
+}
+
+input, select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-width: 100%;
+}
+
+.checkout-form {
+  display: grid;
+  gap: 12px;
+  max-width: 500px;
+}
+
+.checkout-form input,
+.checkout-form select {
+  width: 100%;
+}
+
+.status {
+  display: inline-block;
+  background: #e5f8e9;
+  color: #19753a;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 25px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 15px 5px;
+  background: #eee;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.step.active {
+  background: #5428a5;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  background: #24143d;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+@media (max-width: 600px) {
+  header {
+    justify-content: center;
+  }
+
+  .search input {
+    width: 170px;
+  }
+
+  .hero h1 {
+    font-size: 27px;
+  }
+
+  .steps {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🛍️ ShopEase</div>
+
+  <div class="search">
+    <input id="searchInput" type="text"
+           placeholder="Search products..."
+           aria-label="Search products">
+    <button onclick="searchProducts()">Search</button>
+  </div>
+
+  <button class="cart-button"
+          onclick="showSection('cartSection')">
+    🛒 Cart (<span id="cartCount">0</span>)
+  </button>
+</header>
+
+<div class="hero">
+  <h1>Welcome to ShopEase!</h1>
+  <p>Discover amazing products at great prices.</p>
+  <button onclick="showSection('homeSection')">
+    Start Shopping
+  </button>
+</div>
+
+<section id="homeSection">
+  <h2>✨ Our Products</h2>
+  <div class="products" id="productList"></div>
+</section>
+
+<section id="cartSection" class="hidden">
+  <div class="panel">
+    <h2>🛒 Your Shopping Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total">
+      Total: ₹<span id="cartTotal">0</span>
+    </div>
+    <button onclick="showSection('homeSection')">
+      Continue Shopping
+    </button>
+    <button onclick="openCheckout()">Proceed to Checkout</button>
+  </div>
+</section>
+
+<section id="checkoutSection" class="hidden">
+  <div class="panel">
+    <h2>💳 Checkout & Payment</h2>
+    <p>Enter your delivery details and select a payment method.</p>
+    <br>
+
+    <form class="checkout-form" id="checkoutForm">
+      <input id="customerName" placeholder="Full name" required>
+      <input id="customerPhone" type="tel"
+             placeholder="10-digit mobile number"
+             pattern="[0-9]{10}" required>
+      <input id="customerAddress"
+             placeholder="Full delivery address" required>
+
+      <label for="paymentMethod">Payment method</label>
+      <select id="paymentMethod" required>
+        <option value="UPI">UPI (Demo)</option>
+        <option value="Card">Debit/Credit Card (Demo)</option>
+        <option value="COD">Cash on Delivery</option>
+      </select>
+
+      <div class="total">
+        Amount: ₹<span id="checkoutTotal">0</span>
+      </div>
+
+      <button type="submit">Place Order</button>
+      <button type="button" onclick="showSection('cartSection')">
+        Back to Cart
+      </button>
+    </form>
+
+    <p id="paymentMessage" aria-live="polite"></p>
+  </div>
+</section>
+
+<section id="trackingSection" class="hidden">
+  <div class="panel">
+    <h2>📦 Order Tracking</h2>
+    <p>Order ID: <strong id="orderId"></strong></p>
+    <p>Payment: <span id="paymentStatus" class="status"></span></p>
+    <p>Delivery status: <span id="deliveryStatus"></span></p>
+
+    <div class="steps">
+      <div class="step" id="step1">1. Order Placed</div>
+      <div class="step" id="step2">2. Processing</div>
+      <div class="step" id="step3">3. Shipped</div>
+      <div class="step" id="step4">4. Delivered</div>
+    </div>
+
+    <br>
+    <p id="orderMessage" aria-live="polite"></p>
+    <br>
+    <button onclick="showSection('homeSection')">
+      Continue Shopping
+    </button>
+  </div>
+
+  <div class="panel">
+    <h2>🔎 Track an Existing Order</h2>
+    <p>Enter an order ID created in this browser.</p>
+    <br>
+    <input id="trackingInput" placeholder="Enter order ID">
+    <button onclick="trackOrder()">Track Order</button>
+    <p id="trackingResult" aria-live="polite"></p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 ShopEase | Online Shopping Demo Project</p>
+  <p>Happy Shopping! 💜</p>
+</footer>
+
+<script>
+const products = [
+  { id: 1, name: "Wireless Headphones", price: 1499, emoji: "🎧" },
+  { id: 2, name: "Smart Watch", price: 1999, emoji: "⌚" },
+  { id: 3, name: "Running Shoes", price: 1299, emoji: "👟" },
+  { id: 4, name: "Backpack", price: 899, emoji: "🎒" },
+  { id: 5, name: "Smartphone", price: 12999, emoji: "📱" },
+  { id: 6, name: "Sunglasses", price: 499, emoji: "🕶️" }
+];
+
+let cart = JSON.parse(localStorage.getItem("shopEaseCart") || "[]");
+let orders = JSON.parse(localStorage.getItem("shopEaseOrders") || "[]");
+let currentOrderId = null;
+
+function saveCart() {
+  localStorage.setItem("shopEaseCart", JSON.stringify(cart));
+}
+
+function saveOrders() {
+  localStorage.setItem("shopEaseOrders", JSON.stringify(orders));
+}
+
+function renderProducts(items = products) {
+  const list = document.getElementById("productList");
+
+  if (items.length === 0) {
+    list.innerHTML = "<p>No products found. Try another search.</p>";
+    return;
+  }
+
+  list.innerHTML = items.map(p => `
+    <div class="product">
+      <div class="emoji">${p.emoji}</div>
+      <h3>${p.name}</h3>
+      <p>Quality product at a great price.</p>
+      <div class="price">₹${p.price.toLocaleString("en-IN")}</div>
+      <button onclick="addToCart(${p.id})">Add to Cart</button>
+    </div>
+  `).join("");
+}
+
+function searchProducts() {
+  const query = document.getElementById("searchInput")
+    .value.trim().toLowerCase();
+
+  renderProducts(products.filter(p =>
+    p.name.toLowerCase().includes(query)
+  ));
+
+  showSection("homeSection");
+}
+
+document.getElementById("searchInput")
+  .addEventListener("keydown", event => {
+    if (event.key === "Enter") searchProducts();
+  });
+
+function addToCart(id) {
+  const item = cart.find(p => p.id === id);
+
+  if (item) {
+    item.quantity++;
+  } else {
+    cart.push({ id, quantity: 1 });
+  }
+
+  saveCart();
+  renderCart();
+  alert("Product added to cart!");
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  let total = 0;
+  let count = 0;
+
+  if (cart.length === 0) {
+    container.innerHTML = "<p>Your cart is empty.</p>";
+  } else {
+    container.innerHTML = cart.map(item => {
+      const p = products.find(product => product.id === item.id);
+      if (!p) return "";
+
+      total += p.price * item.quantity;
+      count += item.quantity;
+
+      return `
+        <div class="cart-item">
+          <div>
+            <strong>${p.emoji} ${p.name}</strong>
+            <p>₹${p.price.toLocaleString("en-IN")} each</p>
+          </div>
+          <label>
+            Qty:
+            <input type="number" min="1" max="99"
+              value="${item.quantity}"
+              onchange="changeQuantity(${p.id}, this.value)">
+          </label>
+          <button onclick="removeItem(${p.id})">Remove</button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("cartCount").textContent = count;
+  document.getElementById("cartTotal").textContent =
+    total.toLocaleString("en-IN");
+  document.getElementById("checkoutTotal").textContent =
+    total.toLocaleString("en-IN");
+}
+
+function changeQuantity(id, value) {
+  const quantity = Number(value);
+
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+    alert("Quantity must be between 1 and 99.");
+    renderCart();
+    return;
+  }
+
+  const item = cart.find(p => p.id === id);
+  if (item) item.quantity = quantity;
+
+  saveCart();
+  renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(item => item.id !== id);
+  saveCart();
+  renderCart();
+}
+
+function showSection(id) {
+  [
+    "homeSection",
+    "cartSection",
+    "checkoutSection",
+    "trackingSection"
+  ].forEach(sectionId => {
+    document.getElementById(sectionId).classList.add("hidden");
+  });
+
+  document.getElementById(id).classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openCheckout() {
+  if (cart.length === 0) {
+    alert("Your cart is empty! Add a product first.");
+    return;
+  }
+
+  renderCart();
+  document.getElementById("paymentMessage").textContent = "";
+  showSection("checkoutSection");
+}
+
+document.getElementById("checkoutForm").addEventListener(
+  "submit", function(event) {
+    event.preventDefault();
+
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      showSection("cartSection");
+      return;
+    }
+
+    const method = document.getElementById("paymentMethod").value;
+    const total = cart.reduce((sum, item) => {
+      const product = products.find(p => p.id === item.id);
+      return sum + (product ? product.price * item.quantity : 0);
+    }, 0);
+
+    const order = {
+      id: "SE" + Date.now().toString().slice(-8),
+      name: document.getElementById("customerName").value,
+      phone: document.getElementById("customerPhone").value,
+      address: document.getElementById("customerAddress").value,
+      method,
+      total,
+      items: cart.map(item => ({ ...item })),
+      paymentStatus: method === "COD"
+        ? "Pay on Delivery"
+        : "Demo Payment Successful",
+      deliveryStage: 1,
+      date: new Date().toLocaleString()
+    };
+
+    orders.push(order);
+    currentOrderId = order.id;
+    saveOrders();
+
+    cart = [];
+    saveCart();
+    renderCart();
+
+    document.getElementById("orderId").textContent = order.id;
+    document.getElementById("paymentStatus").textContent =
+      order.paymentStatus;
+    document.getElementById("deliveryStatus").textContent =
+      "Order Placed";
+    document.getElementById("orderMessage").textContent =
+      "Your order has been placed successfully!";
+
+    document.getElementById("paymentMessage").textContent =
+      "Demo order created successfully.";
+
+    document.getElementById("trackingInput").value = order.id;
+    renderTracking(order);
+    showSection("trackingSection");
+  }
+);
+
+function renderTracking(order) {
+  document.getElementById("orderId").textContent = order.id;
+  document.getElementById("paymentStatus").textContent =
+    order.paymentStatus;
+  document.getElementById("deliveryStatus").textContent =
+    ["Order Placed", "Processing", "Shipped", "Delivered"][
+      order.deliveryStage - 1
+    ];
+
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById("step" + i).classList.toggle(
+      "active", i <= order.deliveryStage
+    );
+  }
+
+  document.getElementById("orderMessage").textContent =
+    "Order date: " + order.date +
+    " | Total: ₹" + order.total.toLocaleString("en-IN") +
+    " | Method: " + order.method;
+}
+
+function trackOrder() {
+  const id = document.getElementById("trackingInput")
+    .value.trim().toUpperCase();
+
+  const order = orders.find(o => o.id.toUpperCase() === id);
+  const result = document.getElementById("trackingResult");
+
+  if (!order) {
+    result.textContent = "Order not found in this browser.";
+    return;
+  }
+
+  currentOrderId = order.id;
+  renderTracking(order);
+  result.textContent = "Order found: " + order.id;
+}
+
+// Demo only: advance the delivery status manually.
+function updateDemoDelivery() {
+  const order = orders.find(o => o.id === currentOrderId);
+
+  if (!order) {
+    alert("Place an order first.");
+    return;
+  }
+
+  if (order.deliveryStage < 4) {
+    order.deliveryStage++;
+    saveOrders();
+    renderTracking(order);
+  } else {
+    alert("This demo order is already marked delivered.");
+  }
+}
+
+renderProducts();
+renderCart();
+</script>
+
+</body>
+</html>
